@@ -3,31 +3,23 @@
 	"id": "${id}",
 	"version": "${version}",
 	"name": "${name}",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"description": "Fix the bug that fabric-permission-api crash in 1.21.1",
 	"authors": [
 		"Crystal0404"
 	],
 	"contact": {
 		"homepage": "https://github.com/Crystal0404",
-		"sources": "https://github.com/Crystal0404/fabric-example-mod-kt"
+		"sources": "https://github.com/Crystal0404/PermissionAPIFix"
 	},
 	"license": "CC0-1.0",
-	"icon": "assets/template-mod/icon.png",
+	"icon": "assets/permission-api-fix/icon.png",
 	"environment": "*",
-	"entrypoints": {
-		"main": [
-			"com.example.TemplateMod"
-		]
-	},
 	"mixins": [
-		"template-mod.mixins.json"
+		"permission-api-fix.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.16.14",
-		"minecraft": "~1.21.5",
+		"minecraft": ["1.21", "1.21.1"],
+		"fabric-permissions-api-v0": "*",
 		"java": ">=21"
-	},
-	"suggests": {
-		"another-mod": "*"
 	}
 }

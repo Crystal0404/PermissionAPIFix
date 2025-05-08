@@ -21,14 +21,13 @@ group = "${project.property("maven_group")}"
 version = "v${this.getModVersion()}-mc${project.property("minecraft_version")}"
 
 repositories {
-    // Add repositories to retrieve artifacts from in here.
-    // You should only use this when depending on other mods because
-    // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-    // See https://docs.gradle.org/current/userguide/declaring_repositories.html
-    // for more information about repositories.
     maven {
         name = "Fabric"
         url = uri("https://maven.fabricmc.net/")
+    }
+    maven {
+        name = "Modrinth"
+        url = uri("https://api.modrinth.com/maven")
     }
 }
 
@@ -37,6 +36,9 @@ dependencies {
     minecraft("com.mojang:minecraft:${project.property("minecraft_version")}")
     mappings("net.fabricmc:yarn:${project.property("yarn_mappings")}:v2")
     modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
+
+    modImplementation(fabricApi.module("fabric-api-base", "${project.property("fabric_version")}"))
+    modImplementation("maven.modrinth:fabric-permissions-api:${project.property("permission_version")}")
 }
 
 loom {
@@ -91,34 +93,6 @@ tasks.jar {
     from("LICENSE") {
         rename { "${it}_${inputs.properties["archivesName"]}" }
     }
-}
-
-// [FUNCTION]
-// see more advanced usages
-// https://modmuss50.github.io/mod-publish-plugin
-// modrinth pat
-// https://modrinth.com/settings/pats
-publishMods {
-    val debug = providers.environmentVariable("BUILD_RELEASE").orNull == null
-    dryRun = debug
-    file = tasks.remapJar.get().archiveFile
-    displayName = "${project.property("mod_name")} v${getModVersion()} for Minecraft ${project.property("minecraft_version")}"
-    version = "v${getModVersion()}-mc${project.property("minecraft_version")}"
-    changelog = if (debug) "#Test" else providers.environmentVariable("CHANGELOG").get()
-    modLoaders.add("fabric")
-    type = when {
-        getModVersion().endsWith("alpha") -> ALPHA
-        getModVersion().endsWith("beta") -> BETA
-        else -> STABLE
-    }
-//    modrinth {
-//        accessToken = providers.environmentVariable("MODRINTH_API_KEY")
-//        projectId = "123456"
-//        minecraftVersionRange {
-//            start = project.property("start").toString()
-//            end = project.property("end").toString()
-//        }
-//    }
 }
 
 publishing {
